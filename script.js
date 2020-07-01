@@ -36,7 +36,7 @@ function makePageForEpisodes(episodeList) {
 
 
     let h3 = document.createElement("h3");
-    h3.innerHTML = element.name +" - "+ "S0"+element.season+"SO"+element.number;
+    h3.innerHTML = element.name +" - "+ "S0"+element.season+"E0"+element.number;
     article.appendChild(h3);
     //h3.style.boxShadow =" 3px 3px 0 #c9c9c7";
     h3.style.padding="25px";
