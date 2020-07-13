@@ -16,7 +16,7 @@
   margin: 10px;
 
 }
-.select_episode,
+#select,
 #search,.count_episode {
    padding: 10px 20px;
    text-align: left;
