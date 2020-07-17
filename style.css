@@ -4,10 +4,13 @@
   
 }
 .search_block{
-  padding-left: 10px;
+ 
+ padding-left: 50px;
   display: flex;
   flex-wrap: wrap;
  justify-content: center;
+ height: auto;
+ 
 }
 .search_episode{
   display:flex;
@@ -16,7 +19,7 @@
   margin: 10px;
 
 }
-#select,
+#select_show,#select_episode,
 #search,.count_episode {
    padding: 10px 20px;
    text-align: left;
@@ -28,6 +31,7 @@
   padding-left: 10px;
   justify-content: center;
   width: 100%;
+  height: auto;
   }
 
 article{
@@ -36,6 +40,7 @@ article{
   padding: 15px;
   color :black;
   text-align :center;
+    
 }
 
 h3{
@@ -62,23 +67,22 @@ a{
   color : black;
 }
 @media only screen and (min-width: 300px) {
-
+  
   article {
    width: 100%;
+   justify-content: center;
   
    }
 }
 @media only screen and (min-width: 700px) {
- .search{
-  justify-content: center;
- }
+
   article {
     width: 50%;
   }
  
 }
 @media only screen and (min-width: 900px) {
- 
+
   article {
     width: 25%;
   }

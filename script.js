@@ -4,27 +4,93 @@ let input;
 let count;
 function setup() {
 
- var allEpisodes = getAllEpisodes();
+ /*var allEpisodes = getAllEpisodes();
  makePageForEpisodes(allEpisodes);
  getEpisodes(allEpisodes);
  count= document.querySelector(".count_episode");
  count.textContent = "Displaying "+allEpisodes.length+"/"+allEpisodes.length+" episodes";
- loadEpisode(allEpisodes);
+ loadEpisode(allEpisodes);*/
+ getShows();
+
 }
 
-function getEpisodes(episodeList){
-  input= document.querySelector("#search");
-  input.addEventListener("keyup", () => {
-    let searchWord = document.querySelector("#search").value;
-    let searchedEpisodes = searchEpisodes(episodeList, searchWord);
-    count.textContent ="Displaying "+searchedEpisodes.length+"/"+episodeList.length+" episodes";
-     makePageForEpisodes(searchedEpisodes);
-     //console.log(makePageForEpisodes(searchedEpisodes));
+
+
+function getShows(){
+  fetch("https://api.tvmaze.com/shows")
+  .then(function(response) {
+    if (response.ok) {
+      return response.json();
+    } else {
+      return Promise.reject(response);
+    }
+  })
+  .then(function(shows){
+  
+    let selection = document.getElementById("select_show");
+    let first= document.createElement("option");
+    selection.appendChild(first);
+    first.textContent=" ";
+    shows.forEach(show =>{
+    let options = document.createElement("option");
+    selection.append(options);
+    options.value = show.id;
+    options.textContent =show.name;
+    })
+    selection.addEventListener("change",function(){
+       getShowEpisode(selection.value)
+         console.log(selection.value)
+    })
+
+  })
+}
+
+function getShowEpisode(showId){
+  console.log(showId);
+  fetch(`https://api.tvmaze.com/shows/${showId}/episodes`) 
+  .then(function(response) {
+    if (response.ok) {
+      return response.json();
+    } else {
+     return Promise.reject(response);
+    }
+  })
+  .then(function(episodes){
+    makePageForEpisodes(episodes);
+     getEpisodes(episodes);
+    loadEpisode(episodes);
+      
+  })
+}
+
+
+function loadEpisode(episodeList){
+  
+  let selection =document.getElementById("select_episode");
+  let first= document.createElement("option");
+  selection.appendChild(first);
+  first.textContent=" ";
+  episodeList.forEach(episode => {
+    let options = document.createElement("option");
+    selection.append(options);
+    options.value = episode.id;
+    options.textContent = seasonAndEpisode(episode.number,"S")+seasonAndEpisode(episode.season,"E")+" - "+episode.name ;
+    count = document.querySelector(".count_episode");
+    count.textContent = "Displaying "+episodeList.length+"/"+episodeList.length+" episodes";
   });
-   
 
-}
-function searchEpisodes(episodeList, searchWord) {
+  selection.onchange= function(){
+
+    return episodeList.find(episode => {
+        if(episode.id == selection.value){
+           //location.href = episode.url;
+          window.open(episode.url);
+        }
+      });
+    }
+ }
+
+ function searchEpisodes(episodeList, searchWord) {
   return episodeList.filter(episode => {
     return (
       episode.name.toLowerCase().includes(searchWord.toLowerCase()) ||
@@ -34,31 +100,18 @@ function searchEpisodes(episodeList, searchWord) {
 
 }
 
-let number=1;
-function loadEpisode(episodeList){
+ function getEpisodes(episodeList){
   
-  let selection =document.getElementById("select");
-  let first= document.createElement("option");
-  selection.appendChild(first);
-  first.textContent=" ";
-  episodeList.forEach(episode => {
-    let options = document.createElement("option");
-    selection.append(options);
-    options.value = episode.id;
-    console.log(select.value);
-    options.textContent = seasonAndEpisode(episode.number,"S")+seasonAndEpisode(episode.season,"E")+" - "+episode.name ;
-    number++;
+  input= document.querySelector("#search");
+  input.addEventListener("keyup", () => {
+    let searchWord = document.querySelector("#search").value;
+    let searchedEpisodes = searchEpisodes(episodeList, searchWord);
+    count.textContent ="Displaying "+searchedEpisodes.length+"/"+episodeList.length+" episodes";
+     makePageForEpisodes(searchedEpisodes);
+     //console.log(makePageForEpisodes(searchedEpisodes));
   });
-
-  selection.onchange= function(){
-
-    return episodeList.find(episode => {
-        if(episode.id == selection.value){
-          window.open(episode.url);
-        }
-      });
-    }
- }
+ 
+}
 
 function seasonAndEpisode(number,char){
   let title;
